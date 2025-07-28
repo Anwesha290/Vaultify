@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Hero Section -->
+    <div class="text-center mb-12">
+        <div class="mb-6">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Secure Secret Sharing</h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Share sensitive information securely with one-time access and automatic expiration
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Form Card -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+        <form id="secretForm" class="space-y-8">
+            <!-- Secret Input -->
+            <div>
+                <label for="secret" class="block text-lg font-semibold text-gray-800 mb-3">
+                    Your Secret
+                </label>
+                <textarea 
+                    id="secret" 
+                    name="secret" 
+                    rows="6" 
+                    placeholder="Paste your API key, password, or any sensitive information here..."
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none transition-all duration-200"
+                    required
+                ></textarea>
+            </div>
+
+            <!-- Settings Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="max_views" class="block text-lg font-semibold text-gray-800 mb-3">
+                        Maximum Views
+                    </label>
+                    <select 
+                        id="max_views" 
+                        name="max_views" 
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                    >
+                        <option value="1">1 view (One-time access)</option>
+                        <option value="2">2 views</option>
+                        <option value="3">3 views</option>
+                        <option value="5">5 views</option>
+                        <option value="10">10 views</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="expire_seconds" class="block text-lg font-semibold text-gray-800 mb-3">
+                        Expiration Time
+                    </label>
+                    <select 
+                        id="expire_seconds" 
+                        name="expire_seconds" 
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                    >
+                        <option value="120">2 minutes</option>
+                        <option value="300">5 minutes</option>
+                        <option value="900">15 minutes</option>
+                        <option value="3600">1 hour</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-center pt-4">
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    class="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:scale-105"
+                >
+                    <span id="btnText">Generate Secure Link</span>
+                    <span id="btnSpinner" class="hidden">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Creating...
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Result Section -->
+    <div id="result" class="hidden">
+        <div class="bg-green-50 border-2 border-green-200 rounded-xl p-6">
+            <div class="flex items-center mb-4">
+                <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="text-xl font-semibold text-green-800">Your secret link is ready!</h3>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-green-700 mb-2">Share this link:</label>
+                <div class="flex">
+                    <input 
+                        type="text" 
+                        id="secretLink" 
+                        readonly 
+                        class="flex-grow px-4 py-3 border-2 border-green-300 rounded-l-lg focus:outline-none bg-white text-gray-900 font-mono text-sm"
+                    >
+                    <button 
+                        type="button" 
+                        onclick="copyToClipboard()" 
+                        class="px-6 py-3 bg-green-600 text-white font-semibold rounded-r-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200"
+                    >
+                        Copy
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-sm text-green-700 space-y-1">
+                <p>• This link will expire after being viewed the maximum number of times</p>
+                <p>• The secret will be automatically deleted when the time limit is reached</p>
+                <p>• Share this link securely with your intended recipient</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Form handling
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('secretForm');
+    const resultDiv = document.getElementById('result');
+    const secretLinkInput = document.getElementById('secretLink');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        btnText.classList.add('hidden');
+        btnSpinner.classList.remove('hidden');
+        
+        try {
+            const formData = {
+                secret: document.getElementById('secret').value,
+                max_views: parseInt(document.getElementById('max_views').value),
+                expire_seconds: parseInt(document.getElementById('expire_seconds').value)
+            };
+
+            const response = await fetch('/api/create-secret', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Generate the full URL
+                const fullUrl = window.location.origin + '/view/' + data.id;
+                secretLinkInput.value = fullUrl;
+                
+                // Show result
+                resultDiv.classList.remove('hidden');
+                form.reset();
+                
+                // Scroll to result
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                alert('Error: ' + (data.detail || 'Failed to create secret'));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to create secret. Please try again.');
+        } finally {
+            // Reset button state
+            submitBtn.disabled = false;
+            btnText.classList.remove('hidden');
+            btnSpinner.classList.add('hidden');
+        }
+    });
+});
+
+// Copy to clipboard function
+function copyToClipboard() {
+    const copyText = document.getElementById("secretLink");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    
+    // Show feedback
+    const copyButton = copyText.nextElementSibling;
+    const originalText = copyButton.textContent;
+    copyButton.textContent = 'Copied!';
+    copyButton.classList.add('bg-green-700');
+    
+    setTimeout(() => {
+        copyButton.textContent = originalText;
+        copyButton.classList.remove('bg-green-700');
+    }, 2000);
+}
+</script>
+{% endblock %}
