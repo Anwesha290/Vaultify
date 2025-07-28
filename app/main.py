@@ -40,6 +40,11 @@ templates.env.globals.update({
 # Include API routes
 app.include_router(router, prefix="/api")
 
+# Health check endpoint for deployment
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "timestamp": datetime.now(timezone.utc).isoformat()}
+
 # Serve frontend
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
