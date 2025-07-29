@@ -4,17 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaultify - Secure Secret Sharing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'playfair': ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>">
 </head>
 <body class="bg-gray-50 min-h-screen">
     <div class="min-h-screen flex flex-col">
-        <header class="bg-indigo-600 text-white shadow-lg">
+        <header class="bg-black text-white shadow-lg">
             <div class="container mx-auto px-4 py-6">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-bold">Vaultify</h1>
-                    <a href="/" class="text-indigo-100 hover:text-white">Home</a>
+                    <h1 class="text-2xl font-bold font-playfair">Vaultify</h1>
+                    <a href="/" class="text-indigo-100 hover:text-white font-playfair">Home</a>
                 </div>
             </div>
         </header>

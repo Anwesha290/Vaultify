@@ -105,7 +105,8 @@ input:focus, textarea:focus, select:focus {
 
 /* Enhanced focus states for accessibility */
 button:focus, a:focus {
-    outline: 2px solid #6366f1;
+    background-color: #f163c6;
+    outline: 2px solid ;
     outline-offset: 2px;
 }
 
@@ -116,7 +117,7 @@ button:focus, a:focus {
 
 /* Custom selection color */
 ::selection {
-    background-color: #6366f1;
+    background-color: #f163c6;
     color: white;
 }
 
