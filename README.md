@@ -38,19 +38,21 @@ Vaultify is a secure, one-time secret sharing web application that allows you to
    pip install -r requirements.txt
    ```
 
-4. Set up environment variables:
+4.Run the key_generations script to get the encryption key.
+
+5. Set up environment variables:
    Create a `.env` file in the root directory with the following content:
    ```
    MONGODB_URI=your_mongodb_connection_string
    SECRET_KEY=your_secret_key_here
    ```
 
-5. Run the application:
+6. Run the application:
    ```bash
    uvicorn app.main:app --reload --port 8001
    ```
 
-6. Open your browser and visit: `http://localhost:8001`
+7. Open your browser and visit: `http://localhost:8001`
 
 ## 🛠️ Configuration
 
